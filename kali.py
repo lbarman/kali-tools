@@ -24,6 +24,7 @@ packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'invit
 packages['passwords'] = ['acccheck', 'burp suite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john the ripper', 'johnny', 'keimpx', 'maltego teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'thc-hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
 packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
 packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
+packages['extras'] = ['squid3', 'wifresti']
 
 # post-install scripts (what to do after cloning)
 postInstall = {}

@@ -139,4 +139,23 @@ isGitInstalled()
 
 printKaliMenu()
 
-run("hashid")
+#run("hashid")
+
+# test all packages names against the reference URL, shows broken links / packages
+def testAllURLs():
+    allPackages = []
+    for cat in packages:
+        allPackages += packages[cat]
+    allPackages = set(allPackages)
+    allPackages = sorted(list(allPackages))
+
+    #get the page referencing all packages
+    source = ""
+
+    #for each package, check if in page
+    for p in allPackages:
+        fullPath = "packages/"+p+".git"
+        if p not in source:
+            print("Error", p, "@", fullPath, "not found.")
+
+testAllURLs()

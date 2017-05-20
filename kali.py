@@ -17,9 +17,10 @@ packages['wifi'] = ['aircrack-ng', 'asleap', 'bluemaho', 'blueranger', 'bluelog'
 packages['web'] = ['arachni', 'bbqsql', 'blindelephant', 'burp suite', 'cutycapt', 'davtest', 'dirb', 'dirbuster', 'funkload', 'grabber', 'maltego teeth', 'padbuster', 'paros', 'parsero', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlninja', 'uniscan', 'vega', 'wpscan', 'webscarab', 'webslayer', 'websploit', 'webshag', 'wfuzz', 'xsser', 'apache-users', 'commix', 'deblaze', 'fimap', 'jsql', 'jboss-autopwn', 'joomscan', 'plecost', 'sqlmap', 'sqlsus', 'ua-tester', 'w3af', 'zaproxy']
 packages['sniffing_spoofing'] = ['burp suite', 'dnschef', 'hexinject', 'siparmyknife', 'sipvicious', 'sipp', 'sslsplit', 'sniffjoke', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi honey', 'wireshark', 'yersinia', 'fiked', 'hamster-sidejack', 'ismtp', 'iaxflood', 'inviteflood', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'sslstrip', 'xspy', 'zaproxy']
 packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'http-tunnel ', 'polenum', 'pwnat', 'sbd']
-packages['reporting'] = ['cutycapt', 'dradis', 'keepnote ', 'magictree', 'metagoofil', 'nipper-ng', 'casefile', 'dos2unix', 'pipal']
+packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote ', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
 packages['exploitation'] = ['armitage', 'backdoor factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter  ', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux exploit suggester', 'maltego teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
 packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone backup analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
+packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood ', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
 
 # post-install scripts (what to do after cloning)
 postInstall = {}

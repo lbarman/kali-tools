@@ -23,6 +23,7 @@ packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuc
 packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood ', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
 packages['passwords'] = ['acccheck', 'burp suite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john the ripper', 'johnny', 'keimpx', 'maltego teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'thc-hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
 packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
+packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
 
 # post-install scripts (what to do after cloning)
 postInstall = {}

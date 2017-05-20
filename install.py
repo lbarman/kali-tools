@@ -15,7 +15,10 @@ packages['info_gathering'] = ['acccheck', 'ace-voip', 'amap', 'automater', 'bing
 
 postInstall = {}
 postInstall["nmap"] = ["./configure", "make", "make install"]
-postInstall["nikto"] = ["echo \"#!/bin/sh\ncd program; ./nikto.pl\" > nikto.sh", "chmod u+x nikto.sh"]
+postInstall["nikto"] = ["echo \"#!/bin/sh\ncd $(pwd)/program; ./nikto.pl\" > nikto.sh", "chmod u+x nikto.sh"]
+
+runCmds = {}
+runCmds["nikto"] = "$(pwd)/"+PACKAGE_FOLDER+"nikto/nikto.sh"
 
 print ('''
 
@@ -72,7 +75,7 @@ def installIfNeeded(package):
         return
 
     print("Testing if", package, "exists locally...")
-    if not os.path.isfile(dirName) :
+    if not os.path.isdir(dirName) :
         url = REMOTE_URL.replace("{PACKAGE}", package)
         print("Not found, gonna clone in", dirName)
         gitClone(url, dirName)
@@ -82,6 +85,39 @@ def installIfNeeded(package):
             for s in postInstall[package]:
                 os.system("cd " + dirName + " && " + s)
 
+def run(package):
+
+    #if package is already installed on the system via package manager, just call it
+    if isInstalled(package):
+        print(package, "seems already installed system-wide, calling it")
+        os.system(package)
+
+    #or, maybe clone the git, and run it
+    else:
+        installIfNeeded(package)
+
+        # if we know how to run it, call the command
+        if package in runCmds:
+            print("Running", package)
+            os.system(runCmds[package])
+
+        #if we don't, try to guess
+        else:
+            baseName = PACKAGE_FOLDER+package+"/"+package
+
+            if os.path.isfile(baseName+".sh"):
+                print("Found an executable:", baseName+".sh")
+                os.system(baseName+".sh")
+            elif os.path.isfile(baseName+".py"):
+                print("Found an executable:", baseName+".py")
+                os.system(baseName+".py")
+            elif os.path.isfile(baseName+".pl"):
+                print("Found an executable:", baseName+".pl")
+                os.system(baseName+".pl")
+            #finally, we give up
+            else:
+                print("Please run the program in", PACKAGE_FOLDER, package)
+
 
 isGitInstalled()
-installIfNeeded("nikto")
+run("hashid")

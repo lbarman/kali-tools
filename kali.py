@@ -18,6 +18,8 @@ packages['web'] = ['arachni', 'bbqsql', 'blindelephant', 'burp suite', 'cutycapt
 packages['sniffing_spoofing'] = ['burp suite', 'dnschef', 'hexinject', 'siparmyknife', 'sipvicious', 'sipp', 'sslsplit', 'sniffjoke', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi honey', 'wireshark', 'yersinia', 'fiked', 'hamster-sidejack', 'ismtp', 'iaxflood', 'inviteflood', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'sslstrip', 'xspy', 'zaproxy']
 packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'http-tunnel ', 'polenum', 'pwnat', 'sbd']
 packages['reporting'] = ['cutycapt', 'dradis', 'keepnote ', 'magictree', 'metagoofil', 'nipper-ng', 'casefile', 'dos2unix', 'pipal']
+packages['exploitation'] = ['armitage', 'backdoor factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter  ', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux exploit suggester', 'maltego teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
+packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone backup analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
 
 # post-install scripts (what to do after cloning)
 postInstall = {}

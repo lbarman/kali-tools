@@ -11,6 +11,10 @@ import signal
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
 PACKAGE_FOLDER='dist/'
 
+# ##################################################################
+#          KALI's PACKAGES DEFINITIONS, INSTALL PROCEDURES
+# ##################################################################
+
 # package definitions
 packages = {}
 packages['info_gathering'] = ['acccheck', 'ace-voip', 'amap', 'automater', 'bing-ip2hosts', 'braa', 'casefile', 'cdpsnarf', 'cisco-torch', 'cookie-cadger', 'copy-router-config', 'dmitry', 'dnmap', 'dnsenum', 'dnsmap', 'dnsrecon', 'dnstracer', 'dnswalk', 'dotdotpwn', 'enum4linux', 'enumiax', 'exploitdb', 'fierce', 'firewalk', 'fragroute', 'fragrouter', 'ghost-phisher', 'golismero', 'goofile', 'hping3', 'intrace', 'ismtp', 'lbd', 'maltego-teeth', 'masscan', 'metagoofil', 'miranda', 'nmap', 'ntop', 'p0f', 'parsero', 'recon-ng', 'set', 'smtp-user-enum', 'snmpcheck', 'sslcaudit', 'sslsplit', 'sslstrip', 'sslyze', 'thc-ipv6', 'theharvester', 'tlssled', 'twofi', 'urlcrazy', 'wireshark', 'wol-e', 'xplico']
@@ -27,7 +31,8 @@ packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-audit
 packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
 packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
 packages['extras'] = ['squid3', 'wifresti']
-# adds a redirect for numeric input
+
+# adds a redirect for user's numeric input
 packages['0'] = packages['info_gathering']
 packages['1'] = packages['vuln_analysis']
 packages['2'] = packages['wifi']
@@ -39,12 +44,12 @@ packages['7'] = packages['exploitation']
 packages['8'] = packages['forensics']
 packages['9'] = packages['stress_test']
 packages['10'] = packages['info_gathering']
-packages['11'] = packages['info_gathering']
-packages['12'] = packages['info_gathering']
-packages['13'] = packages['info_gathering']
-packages['14'] = packages['info_gathering']
+packages['11'] = packages['passwords']
+packages['12'] = packages['reverse_engineering']
+packages['13'] = packages['hardware']
+packages['14'] = packages['extras']
 
-# special git folders
+# special git folders. If found here, will use this URL instead of the default one
 specialGitURL = {}
 specialGitURL['wifresti'] = 'https://github.com/LionSec/wifresti.git'
 
@@ -56,7 +61,34 @@ postInstall["nikto"] = ["echo \"#!/bin/sh\ncd $(pwd)/program; ./nikto.pl\" > nik
 # how to run the cloned git (the script already guesses if there's an executable, this is for custom stuff)
 runCmds = {}
 
-# checks if a program is installed by running it in a subprocess and checking for error
+# ##################################################################
+#                            FUNCTIONS
+# ##################################################################
+
+# Helper that handles Ctrl-D
+def readInput(str):
+    print(str)
+    line = sys.stdin.readline()
+    if line:
+        line = line.replace("\r", "").replace("\n", "")
+        return line
+    else: # user pressed C-D, i.e. stdin has been
+        print("Quitting.")
+        sys.exit(1)
+
+#register the Ctrl-C and others to have a clean exit
+def handleInterrupts():
+    def signal_handler(signal, frame):
+        print("Quitting.")
+        sys.exit(1)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGABRT, signal_handler)
+    signal.signal(signal.SIGFPE, signal_handler)
+    signal.signal(signal.SIGILL, signal_handler)
+    signal.signal(signal.SIGSEGV, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
+# checks if a program is installed system-wide by running it in a subprocess and checking for error
 def isInstalled(program):
     try:
         # pipe output to /dev/null for silence
@@ -171,15 +203,10 @@ def testAllURLs():
             if p not in source:
                 print("Error", p, "@", fullPath, "not found.")
 
-def readInput(str): #handles Ctrl-D
-    print(str)
-    line = sys.stdin.readline()
-    if line:
-        line = line.replace("\r", "").replace("\n", "")
-        return line
-    else: # user pressed C-D, i.e. stdin has been
-        print("Quitting.")
-        sys.exit(1)
+
+# ##################################################################
+#                         MAIN LOGIC
+# ##################################################################
 
 def printHeader():
     print (''' _  _    __    __    ____     ____  _____  _____  __    ___ 
@@ -204,6 +231,7 @@ Please select a category:
         action = readInput("Category: ")
     printKaliSubMenu(str(action))
 
+# prints one of Kali's categories
 def printKaliSubMenu(id):
     ps = packages[id]
 
@@ -224,6 +252,7 @@ def printKaliSubMenu(id):
     selectedPackage = m[int(no)]
     printSelectedPackage(selectedPackage)
 
+# prints the selected package, test if installed, and asks wheter to run it
 def printSelectedPackage(p):
     print("")
     print("Package\033[1m", p, "\033[0m") #just to put in bold
@@ -244,21 +273,11 @@ def printSelectedPackage(p):
     else:
         printKaliMenu()
 
-#register the Ctrl-C and others to have a clean exit
-def handleInterrupts():
-    def signal_handler(signal, frame):
-        print("Quitting.")
-        sys.exit(1)
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGABRT, signal_handler)
-    signal.signal(signal.SIGFPE, signal_handler)
-    signal.signal(signal.SIGILL, signal_handler)
-    signal.signal(signal.SIGSEGV, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-
+# entry point
 handleInterrupts()
 isGitInstalled()
 printHeader()
 printKaliMenu()
 
-#testAllURLs()
+# use this to test if all packages are still hosted correctly
+# testAllURLs()

@@ -5,6 +5,7 @@ import os.path
 import sys
 import subprocess
 import requests
+import signal
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
@@ -170,6 +171,16 @@ def testAllURLs():
             if p not in source:
                 print("Error", p, "@", fullPath, "not found.")
 
+def readInput(str): #handles Ctrl-D
+    print(str)
+    line = sys.stdin.readline()
+    if line:
+        line = line.replace("\r", "").replace("\n", "")
+        return line
+    else: # user pressed C-D, i.e. stdin has been
+        print("Quitting.")
+        sys.exit(1)
+
 def printHeader():
     print (''' _  _    __    __    ____     ____  _____  _____  __    ___ 
 ( )/ )  /__\  (  )  (_  _)___(_  _)(  _  )(  _  )(  )  / __)
@@ -190,7 +201,7 @@ Please select a category:
 ''')
     action = ""
     while not action.isdigit() or int(action)<1 or int(action)>14 or not str(action) in packages:
-        action = input("Category: ")
+        action = readInput("Category: ")
     printKaliSubMenu(str(action))
 
 def printKaliSubMenu(id):
@@ -208,7 +219,7 @@ def printKaliSubMenu(id):
     print("")
     no = ""
     while not no.isdigit() or int(no)<1 or int(no)>=i:
-        no = input("Package No: ")
+        no = readInput("Package No: ")
 
     selectedPackage = m[int(no)]
     printSelectedPackage(selectedPackage)
@@ -225,7 +236,7 @@ def printSelectedPackage(p):
 
     ans = ""
     while ans != "y" and ans != "n" :
-        ans = input('Would you like to run it ? [Y/n] ').lower()
+        ans = readInput('Would you like to run it ? [Y/n] ').lower()
 
     if ans == "y":
         print("")
@@ -233,10 +244,20 @@ def printSelectedPackage(p):
     else:
         printKaliMenu()
 
+#register the Ctrl-C and others to have a clean exit
+def handleInterrupts():
+    def signal_handler(signal, frame):
+        print("Quitting.")
+        sys.exit(1)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGABRT, signal_handler)
+    signal.signal(signal.SIGFPE, signal_handler)
+    signal.signal(signal.SIGILL, signal_handler)
+    signal.signal(signal.SIGSEGV, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
-# check for prerequisites
+handleInterrupts()
 isGitInstalled()
-
 printHeader()
 printKaliMenu()
 

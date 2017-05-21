@@ -177,7 +177,7 @@ def printHeader():
 (_)\_)(__)(__)(____)(____)    (__) (_____)(_____)(____)(___/''')
 
 def printKaliMenu():
-    print ('''
+    print('''
 Please select a category:
 
 1) Information Gathering            8) Exploitation Tools
@@ -195,11 +195,43 @@ Please select a category:
 
 def printKaliSubMenu(id):
     ps = packages[id]
+
+    #compute a map to find the package given the number
+    m = {}
+
     print("")
     i = 1
     for p in ps:
+        m[i] = p
         print(str(i) + ") "+p)
         i += 1
+    print("")
+    no = ""
+    while not no.isdigit() or int(no)<1 or int(no)>=i:
+        no = input("Package No: ")
+
+    selectedPackage = m[int(no)]
+    printSelectedPackage(selectedPackage)
+
+def printSelectedPackage(p):
+    print("")
+    print("Package\033[1m", p, "\033[0m") #just to put in bold
+
+    dirName = PACKAGE_FOLDER+p
+    if isInstalled(p) or os.path.isdir(dirName):
+        print("This package is already installed.")
+    else:
+        print("This package is\033[1m not\033[0m installed, and will be downloaded if you try to run it.")
+
+    ans = ""
+    while ans != "y" and ans != "n" :
+        ans = input('Would you like to run it ? [Y/n] ').lower()
+
+    if ans == "y":
+        print("")
+        run(p)
+    else:
+        printKaliMenu()
 
 
 # check for prerequisites
@@ -208,7 +240,4 @@ isGitInstalled()
 printHeader()
 printKaliMenu()
 
-
 #testAllURLs()
-
-#run("hashid")

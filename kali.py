@@ -4,6 +4,7 @@ import os
 import os.path
 import sys
 import subprocess
+import requests
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
@@ -13,18 +14,22 @@ PACKAGE_FOLDER='dist/'
 packages = {}
 packages['info_gathering'] = ['acccheck', 'ace-voip', 'amap', 'automater', 'bing-ip2hosts', 'braa', 'casefile', 'cdpsnarf', 'cisco-torch', 'cookie-cadger', 'copy-router-config', 'dmitry', 'dnmap', 'dnsenum', 'dnsmap', 'dnsrecon', 'dnstracer', 'dnswalk', 'dotdotpwn', 'enum4linux', 'enumiax', 'exploitdb', 'fierce', 'firewalk', 'fragroute', 'fragrouter', 'ghost-phisher', 'golismero', 'goofile', 'hping3', 'intrace', 'ismtp', 'lbd', 'maltego-teeth', 'masscan', 'metagoofil', 'miranda', 'nmap', 'ntop', 'p0f', 'parsero', 'recon-ng', 'set', 'smtp-user-enum', 'snmpcheck', 'sslcaudit', 'sslsplit', 'sslstrip', 'sslyze', 'thc-ipv6', 'theharvester', 'tlssled', 'twofi', 'urlcrazy', 'wireshark', 'wol-e', 'xplico']
 packages['vuln_analysis'] = ['bbqsql', 'bed', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'copy-router-config', 'dbpwaudit', 'doona', 'greenbone-security-assistant', 'gsd', 'hexorbase', 'inguma', 'jsql', 'lynis', 'nmap', 'ohrwurm', 'openvas-administrator', 'openvas-cli', 'openvas-manager', 'openvas-scanner', 'oscanner', 'powerfuzzer', 'sfuzz', 'sidguesser', 'siparmyknife', 'sqlmap', 'sqlninja', 'sqlsus', 'thc-ipv6', 'tnscmd10g', 'unix-privesc-check', 'yersinia']
-packages['wifi'] = ['aircrack-ng', 'asleap', 'bluelog', 'bluemaho', 'bluepot', 'blueranger', 'bluesnarfer', 'bully', 'cowpatty', 'crackle', 'eapmd5pass', 'fern wifi cracker', 'ghost phisher', 'giskismet', 'gr-scan', 'kalibrate-rtl', 'killerbee', 'kismet', 'mdk3', 'mfcuk', 'mfoc', 'mfterm', 'multimon-ng', 'pixiewps', 'reaver', 'redfang', 'rtlsdr scanner', 'spooftooph', 'wifi honey', 'wifitap', 'wifite']
-packages['web'] = ['apache-users', 'arachni', 'bbqsql', 'blindelephant', 'burp suite', 'commix', 'cutycapt', 'davtest', 'deblaze', 'dirb', 'dirbuster', 'fimap', 'funkload', 'grabber', 'jboss-autopwn', 'joomscan', 'jsql', 'maltego teeth', 'padbuster', 'paros', 'parsero', 'plecost', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlmap', 'sqlninja', 'sqlsus', 'ua-tester', 'uniscan', 'vega', 'w3af', 'webscarab', 'webshag', 'webslayer', 'websploit', 'wfuzz', 'wpscan', 'xsser', 'zaproxy']
-packages['sniffing_spoofing'] = ['burp-suite', 'dnschef', 'fiked', 'hamster-sidejack', 'hexinject', 'iaxflood', 'inviteflood', 'ismtp', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'siparmyknife', 'sipp', 'sipvicious', 'sniffjoke', 'sslsplit', 'sslstrip', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi honey', 'wireshark', 'xspy', 'yersinia', 'zaproxy']
+packages['wifi'] = ['aircrack-ng', 'asleap', 'bluelog', 'bluemaho', 'bluepot', 'blueranger', 'bluesnarfer', 'bully', 'cowpatty', 'crackle', 'eapmd5pass', 'fern-wifi-cracker', 'ghost-phisher', 'giskismet', 'gr-scan', 'kalibrate-rtl', 'killerbee', 'kismet', 'mdk3', 'mfcuk', 'mfoc', 'mfterm', 'multimon-ng', 'pixiewps', 'reaver', 'redfang', 'rtlsdr-scanner', 'spooftooph', 'wifi-honey', 'wifitap', 'wifite']
+packages['web'] = ['apache-users', 'arachni', 'bbqsql', 'blindelephant', 'burpsuite', 'commix', 'cutycapt', 'davtest', 'deblaze', 'dirb', 'dirbuster', 'fimap', 'funkload', 'grabber', 'jboss-autopwn', 'joomscan', 'jsql', 'maltego-teeth', 'padbuster', 'paros', 'parsero', 'plecost', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlmap', 'sqlninja', 'sqlsus', 'ua-tester', 'uniscan', 'vega', 'w3af', 'webscarab', 'webshag', 'webslayer', 'websploit', 'wfuzz', 'wpscan', 'xsser', 'zaproxy']
+packages['sniffing_spoofing'] = ['burpsuite', 'dnschef', 'fiked', 'hamster-sidejack', 'hexinject', 'iaxflood', 'inviteflood', 'ismtp', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'siparmyknife', 'sipp', 'sipvicious', 'sniffjoke', 'sslsplit', 'sslstrip', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi-honey', 'wireshark', 'xspy', 'yersinia', 'zaproxy']
 packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'http-tunnel ', 'polenum', 'pwnat', 'sbd']
 packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote ', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
-packages['exploitation'] = ['armitage', 'backdoor factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter  ', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux exploit suggester', 'maltego teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
-packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone backup analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
+packages['exploitation'] = ['armitage', 'backdoor-factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux-exploit-suggester', 'maltego-teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
+packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone-backup-analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
 packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood ', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
-packages['passwords'] = ['acccheck', 'burp suite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john the ripper', 'johnny', 'keimpx', 'maltego teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'thc-hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
+packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john the ripper', 'johnny', 'keimpx', 'maltego-teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
 packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
 packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
 packages['extras'] = ['squid3', 'wifresti']
+
+# special git folders
+specialGitURL = {}
+specialGitURL['wifresti'] = 'https://github.com/LionSec/wifresti.git'
 
 # post-install scripts (what to do after cloning)
 postInstall = {}
@@ -151,11 +156,20 @@ def testAllURLs():
 
     #get the page referencing all packages
     source = ""
+    try:
+        print("Contacting web server...")
+        req = requests.get("http://git.kali.org/gitweb/", timeout=30)
+        print("Done.")
+        source = req.text
+    except:
+        print("Could not read git repos")
+        sys.exit(1)
 
     #for each package, check if in page
     for p in allPackages:
-        fullPath = "packages/"+p+".git"
-        if p not in source:
-            print("Error", p, "@", fullPath, "not found.")
+        if p not in specialGitURL:
+            fullPath = "packages/"+p+".git"
+            if p not in source:
+                print("Error", p, "@", fullPath, "not found.")
 
 testAllURLs()

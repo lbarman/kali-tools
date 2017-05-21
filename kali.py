@@ -128,24 +128,6 @@ def run(package):
             else:
                 print("Please run the program in", PACKAGE_FOLDER, package)
 
-def printKaliMenu():
-    print ('''
-1) Information Gathering            8) Exploitation Tools
-2) Vulnerability Analysis           9) Forensics Tools
-3) Wireless Attacks                 10) Stress Testing
-4) Web Applications                 11) Password Attacks
-5) Sniffing & Spoofing              12) Reverse Engineering
-6) Maintaining Access               13) Hardware Hacking
-7) Reporting Tools                  14) Extra
-''')
-
-# check for prerequisites
-isGitInstalled()
-
-printKaliMenu()
-
-#run("hashid")
-
 # test all packages names against the reference URL, shows broken links / packages
 def testAllURLs():
     allPackages = []
@@ -172,4 +154,37 @@ def testAllURLs():
             if p not in source:
                 print("Error", p, "@", fullPath, "not found.")
 
-testAllURLs()
+def printHeader():
+    print (''' _  _    __    __    ____     ____  _____  _____  __    ___ 
+( )/ )  /__\  (  )  (_  _)___(_  _)(  _  )(  _  )(  )  / __)
+ )  (  /(__)\  )(__  _)(_(___) )(   )(_)(  )(_)(  )(__ \__ 
+(_)\_)(__)(__)(____)(____)    (__) (_____)(_____)(____)(___/''')
+
+def printKaliMenu():
+    print ('''
+Please select a category:
+
+1) Information Gathering            8) Exploitation Tools
+2) Vulnerability Analysis           9) Forensics Tools
+3) Wireless Attacks                 10) Stress Testing
+4) Web Applications                 11) Password Attacks
+5) Sniffing & Spoofing              12) Reverse Engineering
+6) Maintaining Access               13) Hardware Hacking
+7) Reporting Tools                  14) Extra
+''')
+    action = ""
+    while not action.isdigit() or int(action)<1 or int(action)>14:
+        action = input("Category: ")
+    print("Gonna print", action)
+
+
+# check for prerequisites
+isGitInstalled()
+
+printHeader()
+printKaliMenu()
+
+
+#testAllURLs()
+
+#run("hashid")

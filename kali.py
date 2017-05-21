@@ -6,6 +6,7 @@ import sys
 import subprocess
 import requests
 import signal
+import desc
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
@@ -238,11 +239,19 @@ def printKaliSubMenu(id):
     #compute a map to find the package given the number
     m = {}
 
+    longestStr = len(max(ps, key=len))
     print("")
     i = 1
     for p in ps:
         m[i] = p
-        print(str(i) + ") "+p)
+        spaces = ' ' * (longestStr - len(p))
+        description = ""
+        if p in desc.desc:
+            description = desc.desc[p]
+        if i < 10 :
+            print(' '+ str(i) + ") "+p, spaces, description)
+        else:
+            print(str(i) + ") "+p, spaces, description)
         i += 1
     print("")
     no = ""
@@ -278,6 +287,5 @@ handleInterrupts()
 isGitInstalled()
 printHeader()
 printKaliMenu()
-
 # use this to test if all packages are still hosted correctly
 # testAllURLs()

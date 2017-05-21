@@ -26,6 +26,22 @@ packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-audit
 packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
 packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
 packages['extras'] = ['squid3', 'wifresti']
+# adds a redirect for numeric input
+packages['0'] = packages['info_gathering']
+packages['1'] = packages['vuln_analysis']
+packages['2'] = packages['wifi']
+packages['3'] = packages['web']
+packages['4'] = packages['sniffing_spoofing']
+packages['5'] = packages['keep_access']
+packages['6'] = packages['reporting']
+packages['7'] = packages['exploitation']
+packages['8'] = packages['forensics']
+packages['9'] = packages['stress_test']
+packages['10'] = packages['info_gathering']
+packages['11'] = packages['info_gathering']
+packages['12'] = packages['info_gathering']
+packages['13'] = packages['info_gathering']
+packages['14'] = packages['info_gathering']
 
 # special git folders
 specialGitURL = {}
@@ -173,9 +189,17 @@ Please select a category:
 7) Reporting Tools                  14) Extra
 ''')
     action = ""
-    while not action.isdigit() or int(action)<1 or int(action)>14:
+    while not action.isdigit() or int(action)<1 or int(action)>14 or not str(action) in packages:
         action = input("Category: ")
-    print("Gonna print", action)
+    printKaliSubMenu(str(action))
+
+def printKaliSubMenu(id):
+    ps = packages[id]
+    print("")
+    i = 1
+    for p in ps:
+        print(str(i) + ") "+p)
+        i += 1
 
 
 # check for prerequisites

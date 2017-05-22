@@ -7,6 +7,7 @@ import subprocess
 import requests
 import signal
 import desc
+from bs4 import BeautifulSoup, SoupStrainer
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
@@ -23,14 +24,14 @@ packages['vuln_analysis'] = ['bbqsql', 'bed', 'cisco-auditing-tool', 'cisco-glob
 packages['wifi'] = ['aircrack-ng', 'asleap', 'bluelog', 'bluemaho', 'bluepot', 'blueranger', 'bluesnarfer', 'bully', 'cowpatty', 'crackle', 'eapmd5pass', 'fern-wifi-cracker', 'ghost-phisher', 'giskismet', 'gr-scan', 'kalibrate-rtl', 'killerbee', 'kismet', 'mdk3', 'mfcuk', 'mfoc', 'mfterm', 'multimon-ng', 'pixiewps', 'reaver', 'redfang', 'rtlsdr-scanner', 'spooftooph', 'wifi-honey', 'wifitap', 'wifite']
 packages['web'] = ['apache-users', 'arachni', 'bbqsql', 'blindelephant', 'burpsuite', 'commix', 'cutycapt', 'davtest', 'deblaze', 'dirb', 'dirbuster', 'fimap', 'funkload', 'grabber', 'jboss-autopwn', 'joomscan', 'jsql', 'maltego-teeth', 'padbuster', 'paros', 'parsero', 'plecost', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlmap', 'sqlninja', 'sqlsus', 'ua-tester', 'uniscan', 'vega', 'w3af', 'webscarab', 'webshag', 'webslayer', 'websploit', 'wfuzz', 'wpscan', 'xsser', 'zaproxy']
 packages['sniffing_spoofing'] = ['burpsuite', 'dnschef', 'fiked', 'hamster-sidejack', 'hexinject', 'iaxflood', 'inviteflood', 'ismtp', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'siparmyknife', 'sipp', 'sipvicious', 'sniffjoke', 'sslsplit', 'sslstrip', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi-honey', 'wireshark', 'xspy', 'yersinia', 'zaproxy']
-packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'http-tunnel ', 'polenum', 'pwnat', 'sbd']
-packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote ', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
+packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'httptunnel', 'polenum', 'pwnat', 'sbd']
+packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
 packages['exploitation'] = ['armitage', 'backdoor-factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux-exploit-suggester', 'maltego-teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
 packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone-backup-analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
-packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood ', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
-packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john the ripper', 'johnny', 'keimpx', 'maltego-teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
-packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad ', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
-packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g ', 'smali']
+packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
+packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john', 'johnny', 'keimpx', 'maltego-teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
+packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
+packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g', 'smali']
 packages['extras'] = ['squid3', 'wifresti']
 
 # adds a redirect for user's numeric input
@@ -285,7 +286,47 @@ def printSelectedPackage(p):
 # entry point
 handleInterrupts()
 isGitInstalled()
-printHeader()
-printKaliMenu()
+#printHeader()
+#printKaliMenu()
 # use this to test if all packages are still hosted correctly
 # testAllURLs()
+
+# fetches the links to get the full description of the pacakge
+def fetchPackageLinks():
+    d = requests.get("http://tools.kali.org/tools-listing")
+    rawHtml = d.text
+    soup = BeautifulSoup(rawHtml, 'html.parser')
+    links = {}
+    for link in soup.find_all('a'):
+        if "<a href=\"http://tools.kali.org/" in str(link) :
+            package = link.string.lower().replace(" ", "-")
+            links[package] = link.get('href')
+
+    #for l in sorted(links.keys()):
+    #    print("links['"+l+"'] = \""+links[l]+"\"")
+
+    return links
+
+def fetchPackageDescription(links):
+    for p in sorted(desc.desc.keys()):
+        if desc.desc[p] == "":
+            if p in links:
+                #print("Getting doc for", p)
+                d = requests.get(links[p])
+
+                out = ""
+                if d.status_code == 200 :
+                    rawHtml = d.text
+                    soup = BeautifulSoup(rawHtml, 'html.parser')
+                    for s in soup.find_all('section'):
+                        if "Package Description" in str(s):
+                            for par in s.find_all('p'):
+                                if not "Homepage" in par.text:
+                                    t = par.text.strip()
+                                    if not t.endswith("."):
+                                        t += "."
+                                    out += t + " "
+                    print("desc['"+p+"'] = \""+out.replace("\"", "\\\"")+"\"")
+
+l = fetchPackageLinks()
+fetchPackageDescription(l)

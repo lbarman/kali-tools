@@ -56,7 +56,7 @@ def isInstalledWithSystemPM(program):
         null = open("/dev/null", "w")
         res = subprocess.Popen(["which", program], stdout=subprocess.PIPE, stderr=null)
         null.close()
-        o = res.stdout.read()
+        o = res.stdout.read().decode("utf8")
         if o == "":
             return False
         return True
@@ -283,7 +283,7 @@ def printSelectedPackage(p, highlightTerm):
 
 def search(term):
     print("")
-    print("Searching for", term)
+    print("Searching for \033[31m", term, "\033[m")
 
     matches = []
     for cat in data.packages:

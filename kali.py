@@ -7,6 +7,7 @@ import subprocess
 import requests
 import signal
 from bs4 import BeautifulSoup, SoupStrainer
+import re
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
@@ -184,11 +185,13 @@ def printPackageLine(id, p, longestPackageName, highlightTerm):
     
     #if given, highlight the term
     if highlightTerm is not None:
-        p = p.replace(highlightTerm, "\033[31m"+highlightTerm+"\033[m")
-        description = description.replace(highlightTerm, "\033[31m"+highlightTerm+"\033[m")
+        regex = re.compile(re.escape(highlightTerm), re.IGNORECASE)
+        p = regex.sub("\033[31m"+highlightTerm+"\033[m", p)
+        description = regex.sub("\033[31m"+highlightTerm+"\033[m", description)
 
-        if highlightTerm not in p and highlightTerm not in description:
+        if "[31m" not in p and "[31m" not in description:
             description = description.replace("...", "\033[31m...\033[m")
+
 
     print(num, p, spaces, isInstalledStr, description)
 
@@ -229,7 +232,7 @@ def printPackageCollection(package, highlightTerm):
         no = readInput("Package No: ")
 
     selectedPackage = m[int(no)]
-    printSelectedPackage(selectedPackage)
+    printSelectedPackage(selectedPackage, highlightTerm)
 
 # prints one of Kali's categories
 def printKaliSubMenu(id):
@@ -237,18 +240,35 @@ def printKaliSubMenu(id):
     printPackageCollection(ps, None)
 
 # prints the selected package, test if installed, and asks wheter to run it
-def printSelectedPackage(p):
-    print("")
-    print("Package\033[1m", p, "\033[0m") #just to put in bold
+def printSelectedPackage(p, highlightTerm):
+    print("-" * DESCRIPTION_EXTRACT_MAX_LENGTH)
+    print("| Package\033[1m", p, "\033[0m") #just to put in bold
+    print("-" * DESCRIPTION_EXTRACT_MAX_LENGTH)
+    if p in data.desc and data.desc[p] != "":
+        print("| Description:")
+        d = data.desc[p]
+        if highlightTerm is not None:
+            regex = re.compile(re.escape(highlightTerm), re.IGNORECASE)
+            d = regex.sub("\033[31m"+highlightTerm+"\033[m", d)
+        #print with line wrap
+        ds = d.split("\n")
+        for part in ds:
+            while len(part) > DESCRIPTION_EXTRACT_MAX_LENGTH:
+                end = part[0:DESCRIPTION_EXTRACT_MAX_LENGTH].rfind(' ')
+                print("| "+part[0:end])
+                part=part[end+1:]
+            print("| "+part)
+            
+    print("-" * DESCRIPTION_EXTRACT_MAX_LENGTH)
 
     if isInstalledWithSystemPM(p) or isInstalledWithGitLocally(p):
-        print("This package is already installed.")
+        print("This package is already installed (and will not be downloaded).")
     else:
-        print("This package is\033[1m not\033[0m installed, and will be downloaded if you try to run it.")
+        print("This package is \033[31mnot\033[m installed, and will be downloaded if you try to run it.")
 
     ans = ""
     while ans != "y" and ans != "n" :
-        ans = readInput('Would you like to run it ? [Y/n] ').lower()
+        ans = readInput('Would you like to download/run it ? [Y/n] ').lower()
 
     if ans == "y":
         print("")
@@ -256,32 +276,38 @@ def printSelectedPackage(p):
     else:
         printKaliMenu()
 
-# entry point
-handleInterrupts()
-isGitInstalled()
-
-printHeader()
-# if no args given, print interactive menu
-if len(sys.argv) == 1:
-    printKaliMenu()
-#otherwise, search for tools
-else:
-    pSearch = sys.argv[1]
+def search(term):
     print("")
-    print("Searching for", pSearch)
+    print("Searching for", term)
 
     matches = []
     for cat in data.packages:
         if not cat.isdigit():
             for p in data.packages[cat]:
-                if pSearch in p or (p in data.desc and pSearch in data.desc[p]):
+                if term.lower() in p.lower() or (p in data.desc and term.lower() in data.desc[p].lower()):
                     matches.append(p)
 
     if len(matches) == 0:
         print("No packages matching.")
     else:
         matches = list(set(matches)) #make results uniques
-        printPackageCollection(matches, pSearch)
+        printPackageCollection(matches, term)
+
+# ##################################################################
+#                         ENTRY POINT
+# ##################################################################
+
+
+# entry point
+handleInterrupts()
+isGitInstalled()
+
+printHeader()
+# if no args given, print interactive menu, otherwise, directly search
+if len(sys.argv) == 1:
+    printKaliMenu()
+else:
+    search(sys.argv[1])
 
 
 # use this to test if all packages are still hosted correctly

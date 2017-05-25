@@ -258,6 +258,8 @@ def printSelectedPackage(p, highlightTerm):
                 print("| "+part[0:end])
                 part=part[end+1:]
             print("| "+part)
+    else:
+        print("| (no description yet)")
             
     print("-" * DESCRIPTION_EXTRACT_MAX_LENGTH)
 
@@ -305,6 +307,8 @@ isGitInstalled()
 printHeader()
 # if no args given, print interactive menu, otherwise, directly search
 if len(sys.argv) == 1:
+    print("")
+    print("PROTIP: use "+sys.argv[0]+" TERM to directly search for TERM")
     printKaliMenu()
 else:
     search(sys.argv[1])

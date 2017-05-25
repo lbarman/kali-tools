@@ -153,6 +153,37 @@ def printHeader():
  )  (  /(__)\  )(__  _)(_(___) )(   )(_)(  )(_)(  )(__ \__ 
 (_)\_)(__)(__)(____)(____)    (__) (_____)(_____)(____)(___/''')
 
+def printTableHeader(longestPackageName):
+    print(" N°|  Name"+ ' ' * (longestPackageName - 4)+" | Installed | Description")
+    print('---|'+'-' * (longestPackageName+3) + '|-----------|' + '-' * (DESCRIPTION_EXTRACT_MAX_LENGTH+1))
+
+
+def printPackageLine(id, p, longestPackageName):
+    #pad for 0-9
+    num = str(id)+") "
+    if id < 10 :
+        num = " "+num
+
+    #compute "installed" field
+    isInstalledStr = "            "
+    if isInstalledWithSystemPM(p):
+        isInstalledStr = " YES, system"
+    elif isInstalledWithGitLocally(p):
+        isInstalledStr = " YES, git   "
+
+    #compute description field
+    description = ""
+    if p in data.desc:
+        description = data.desc[p]
+        if len(description) > DESCRIPTION_EXTRACT_MAX_LENGTH:
+            description = description[0:DESCRIPTION_EXTRACT_MAX_LENGTH-3]+"..."
+        description = " " + description
+
+    #pad the name to the longest name
+    spaces = ' ' * (longestPackageName - len(p))
+        
+    print(num, p, spaces, isInstalledStr, description)
+
 def printKaliMenu():
     print('''
 Please select a category:
@@ -185,31 +216,9 @@ def printKaliSubMenu(id):
 
         #print header
         if i==1:
-            print(" N°|  Name"+ ' ' * (longestStr - 4)+" | Installed | Description")
-            print('---|'+'-' * (longestStr+3) + '|-----------|' + '-' * (DESCRIPTION_EXTRACT_MAX_LENGTH+1))
+            printTableHeader(longestStr)
+        printPackageLine(i, p, longestStr)
 
-        spaces = ' ' * (longestStr - len(p))
-
-        #compute description, print final line
-        description = ""
-        if p in data.desc:
-            description = data.desc[p]
-            if len(description) > DESCRIPTION_EXTRACT_MAX_LENGTH:
-                description = description[0:DESCRIPTION_EXTRACT_MAX_LENGTH-3]+"..."
-            description = " " + description
-
-        isInstalledStr = "            "
-        if isInstalledWithSystemPM(p):
-            isInstalledStr = " YES, system"
-        elif isInstalledWithGitLocally(p):
-            isInstalledStr = " YES, git   "
-
-        #pad for 0-9
-        num = str(i)+") "
-        if i < 10 :
-            num = " "+num
-        
-        print(num, p, spaces, isInstalledStr, description)
         i += 1
     print("")
     no = ""

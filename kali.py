@@ -54,8 +54,11 @@ def isInstalledWithSystemPM(program):
     try:
         # pipe output to /dev/null for silence
         null = open("/dev/null", "w")
-        subprocess.Popen(program, stdout=null, stderr=null)
+        res = subprocess.Popen(["which", program], stdout=subprocess.PIPE, stderr=null)
         null.close()
+        o = res.stdout.read()
+        if o == "":
+            return False
         return True
 
     except OSError:

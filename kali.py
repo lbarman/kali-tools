@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
 PACKAGE_FOLDER='dist/'
+DESCRIPTION_EXTRACT_MAX_LENGTH = 100
 
 
 # ##################################################################
@@ -48,7 +49,7 @@ def handleInterrupts():
     signal.signal(signal.SIGTERM, signal_handler)
 
 # checks if a program is installed system-wide by running it in a subprocess and checking for error
-def isInstalled(program):
+def isInstalledWithSystemPM(program):
     try:
         # pipe output to /dev/null for silence
         null = open("/dev/null", "w")
@@ -59,9 +60,14 @@ def isInstalled(program):
     except OSError:
         return False
 
+# checks if a program is "installed" locally (in dist/)
+def isInstalledWithGitLocally(package):
+    dirName = PACKAGE_FOLDER+package
+    return os.path.isdir(dirName)
+
 # if git is not installed, exit 1
 def isGitInstalled():
-    if not isInstalled("git"):
+    if not isInstalledWithSystemPM("git"):
         print("git is required for this script to work. Please install it manually, e.g.:")
         print("   $ sudo apt-get install git")
         print("        or")
@@ -87,12 +93,12 @@ def gitClone(repo, localDir):
 def installIfNeeded(package):
     dirName = PACKAGE_FOLDER+package
 
-    if isInstalled(package):
+    if isInstalledWithSystemPM(package):
         print(package, "seems already installed. Skipping")
         return
 
     print("Testing if", package, "exists locally...")
-    if not os.path.isdir(dirName) :
+    if not isInstalledWithGitLocally(package) :
         url = REMOTE_URL.replace("{PACKAGE}", package)
         print("Not found, gonna clone in", dirName)
         gitClone(url, dirName)
@@ -106,7 +112,7 @@ def installIfNeeded(package):
 def run(package):
 
     #if package is already installed on the system via package manager, just call it
-    if isInstalled(package):
+    if isInstalledWithSystemPM(package):
         print(package, "seems already installed system-wide, calling it")
         os.system(package)
 
@@ -176,14 +182,34 @@ def printKaliSubMenu(id):
     i = 1
     for p in ps:
         m[i] = p
+
+        #print header
+        if i==1:
+            print(" N°|  Name"+ ' ' * (longestStr - 4)+" | Installed | Description")
+            print('---|'+'-' * (longestStr+3) + '|-----------|' + '-' * (DESCRIPTION_EXTRACT_MAX_LENGTH+1))
+
         spaces = ' ' * (longestStr - len(p))
+
+        #compute description, print final line
         description = ""
         if p in data.desc:
             description = data.desc[p]
+            if len(description) > DESCRIPTION_EXTRACT_MAX_LENGTH:
+                description = description[0:DESCRIPTION_EXTRACT_MAX_LENGTH-3]+"..."
+            description = " " + description
+
+        isInstalledStr = "            "
+        if isInstalledWithSystemPM(p):
+            isInstalledStr = " YES, system"
+        elif isInstalledWithGitLocally(p):
+            isInstalledStr = " YES, git   "
+
+        #pad for 0-9
+        num = str(i)+") "
         if i < 10 :
-            print(' '+ str(i) + ") "+p, spaces, description)
-        else:
-            print(str(i) + ") "+p, spaces, description)
+            num = " "+num
+        
+        print(num, p, spaces, isInstalledStr, description)
         i += 1
     print("")
     no = ""
@@ -198,8 +224,7 @@ def printSelectedPackage(p):
     print("")
     print("Package\033[1m", p, "\033[0m") #just to put in bold
 
-    dirName = PACKAGE_FOLDER+p
-    if isInstalled(p) or os.path.isdir(dirName):
+    if isInstalledWithSystemPM(p) or isInstalledWithGitLocally(p):
         print("This package is already installed.")
     else:
         print("This package is\033[1m not\033[0m installed, and will be downloaded if you try to run it.")

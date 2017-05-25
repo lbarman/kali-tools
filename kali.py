@@ -158,7 +158,7 @@ def printTableHeader(longestPackageName):
     print('---|'+'-' * (longestPackageName+3) + '|-----------|' + '-' * (DESCRIPTION_EXTRACT_MAX_LENGTH+1))
 
 
-def printPackageLine(id, p, longestPackageName):
+def printPackageLine(id, p, longestPackageName, highlightTerm):
     #pad for 0-9
     num = str(id)+") "
     if id < 10 :
@@ -181,7 +181,15 @@ def printPackageLine(id, p, longestPackageName):
 
     #pad the name to the longest name
     spaces = ' ' * (longestPackageName - len(p))
-        
+    
+    #if given, highlight the term
+    if highlightTerm is not None:
+        p = p.replace(highlightTerm, "\033[31m"+highlightTerm+"\033[m")
+        description = description.replace(highlightTerm, "\033[31m"+highlightTerm+"\033[m")
+
+        if highlightTerm not in p and highlightTerm not in description:
+            description = description.replace("...", "\033[31m...\033[m")
+
     print(num, p, spaces, isInstalledStr, description)
 
 def printKaliMenu():
@@ -202,7 +210,7 @@ Please select a category:
     printKaliSubMenu(str(action))
 
 # prints a collection of packages
-def printPackageCollection(package):
+def printPackageCollection(package, highlightTerm):
 
     #compute a map to find the package given the number
     m = {}
@@ -213,7 +221,7 @@ def printPackageCollection(package):
     printTableHeader(longestStr)
     for p in package:
         m[i] = p
-        printPackageLine(i, p, longestStr)
+        printPackageLine(i, p, longestStr, highlightTerm)
         i += 1
     print("")
     no = ""
@@ -226,7 +234,7 @@ def printPackageCollection(package):
 # prints one of Kali's categories
 def printKaliSubMenu(id):
     ps = data.packages[id]
-    printPackageCollection(ps)
+    printPackageCollection(ps, None)
 
 # prints the selected package, test if installed, and asks wheter to run it
 def printSelectedPackage(p):
@@ -273,7 +281,7 @@ else:
         print("No packages matching.")
     else:
         matches = list(set(matches)) #make results uniques
-        printPackageCollection(matches)
+        printPackageCollection(matches, pSearch)
 
 
 # use this to test if all packages are still hosted correctly

@@ -201,24 +201,19 @@ Please select a category:
         action = readInput("Category: ")
     printKaliSubMenu(str(action))
 
-# prints one of Kali's categories
-def printKaliSubMenu(id):
-    ps = data.packages[id]
+# prints a collection of packages
+def printPackageCollection(package):
 
     #compute a map to find the package given the number
     m = {}
 
-    longestStr = len(max(ps, key=len))
+    longestStr = len(max(package, key=len))
     print("")
     i = 1
-    for p in ps:
+    printTableHeader(longestStr)
+    for p in package:
         m[i] = p
-
-        #print header
-        if i==1:
-            printTableHeader(longestStr)
         printPackageLine(i, p, longestStr)
-
         i += 1
     print("")
     no = ""
@@ -227,6 +222,11 @@ def printKaliSubMenu(id):
 
     selectedPackage = m[int(no)]
     printSelectedPackage(selectedPackage)
+
+# prints one of Kali's categories
+def printKaliSubMenu(id):
+    ps = data.packages[id]
+    printPackageCollection(ps)
 
 # prints the selected package, test if installed, and asks wheter to run it
 def printSelectedPackage(p):
@@ -253,7 +253,28 @@ handleInterrupts()
 isGitInstalled()
 
 printHeader()
-printKaliMenu()
+# if no args given, print interactive menu
+if len(sys.argv) == 1:
+    printKaliMenu()
+#otherwise, search for tools
+else:
+    pSearch = sys.argv[1]
+    print("")
+    print("Searching for", pSearch)
+
+    matches = []
+    for cat in data.packages:
+        if not cat.isdigit():
+            for p in data.packages[cat]:
+                if pSearch in p or (p in data.desc and pSearch in data.desc[p]):
+                    matches.append(p)
+
+    if len(matches) == 0:
+        print("No packages matching.")
+    else:
+        matches = list(set(matches)) #make results uniques
+        printPackageCollection(matches)
+
 
 # use this to test if all packages are still hosted correctly
 # helpers.testAllURLs()

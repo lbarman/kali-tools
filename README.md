@@ -6,10 +6,10 @@ Additionnally, it allows **searching** for tools, a feature I was dearly missing
 
 Author: Ludovic Barman
 
-# searching for SQL injection
+# Demo: Search + Descriptions
 
 ![demo 1](demo1.png "Search demo on kali tools")
 
-## If no search term is given, it displays the kali menu:
+## Demo: Kali Menu
 
 ![demo 2](demo2.png "Menu demo on kali tools")

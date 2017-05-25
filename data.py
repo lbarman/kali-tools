@@ -1,3 +1,60 @@
+#this file contains the following data structures :
+# packages, specialGitUrl, runCmds, postInstall, desc, links
+
+# ##################################################################
+#          KALI's PACKAGES DEFINITIONS, INSTALL PROCEDURES
+# ##################################################################
+
+# package definitions
+packages = {}
+packages['info_gathering'] = ['acccheck', 'ace-voip', 'amap', 'automater', 'bing-ip2hosts', 'braa', 'casefile', 'cdpsnarf', 'cisco-torch', 'cookie-cadger', 'copy-router-config', 'dmitry', 'dnmap', 'dnsenum', 'dnsmap', 'dnsrecon', 'dnstracer', 'dnswalk', 'dotdotpwn', 'enum4linux', 'enumiax', 'exploitdb', 'fierce', 'firewalk', 'fragroute', 'fragrouter', 'ghost-phisher', 'golismero', 'goofile', 'hping3', 'intrace', 'ismtp', 'lbd', 'maltego-teeth', 'masscan', 'metagoofil', 'miranda', 'nmap', 'ntop', 'p0f', 'parsero', 'recon-ng', 'set', 'smtp-user-enum', 'snmpcheck', 'sslcaudit', 'sslsplit', 'sslstrip', 'sslyze', 'thc-ipv6', 'theharvester', 'tlssled', 'twofi', 'urlcrazy', 'wireshark', 'wol-e', 'xplico']
+packages['vuln_analysis'] = ['bbqsql', 'bed', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'copy-router-config', 'dbpwaudit', 'doona', 'greenbone-security-assistant', 'gsd', 'hexorbase', 'inguma', 'jsql', 'lynis', 'nmap', 'ohrwurm', 'openvas-administrator', 'openvas-cli', 'openvas-manager', 'openvas-scanner', 'oscanner', 'powerfuzzer', 'sfuzz', 'sidguesser', 'siparmyknife', 'sqlmap', 'sqlninja', 'sqlsus', 'thc-ipv6', 'tnscmd10g', 'unix-privesc-check', 'yersinia']
+packages['wifi'] = ['aircrack-ng', 'asleap', 'bluelog', 'bluemaho', 'bluepot', 'blueranger', 'bluesnarfer', 'bully', 'cowpatty', 'crackle', 'eapmd5pass', 'fern-wifi-cracker', 'ghost-phisher', 'giskismet', 'gr-scan', 'kalibrate-rtl', 'killerbee', 'kismet', 'mdk3', 'mfcuk', 'mfoc', 'mfterm', 'multimon-ng', 'pixiewps', 'reaver', 'redfang', 'rtlsdr-scanner', 'spooftooph', 'wifi-honey', 'wifitap', 'wifite']
+packages['web'] = ['apache-users', 'arachni', 'bbqsql', 'blindelephant', 'burpsuite', 'commix', 'cutycapt', 'davtest', 'deblaze', 'dirb', 'dirbuster', 'fimap', 'funkload', 'grabber', 'jboss-autopwn', 'joomscan', 'jsql', 'maltego-teeth', 'padbuster', 'paros', 'parsero', 'plecost', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlmap', 'sqlninja', 'sqlsus', 'ua-tester', 'uniscan', 'vega', 'w3af', 'webscarab', 'webshag', 'webslayer', 'websploit', 'wfuzz', 'wpscan', 'xsser', 'zaproxy']
+packages['sniffing_spoofing'] = ['burpsuite', 'dnschef', 'fiked', 'hamster-sidejack', 'hexinject', 'iaxflood', 'inviteflood', 'ismtp', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'siparmyknife', 'sipp', 'sipvicious', 'sniffjoke', 'sslsplit', 'sslstrip', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi-honey', 'wireshark', 'xspy', 'yersinia', 'zaproxy']
+packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'httptunnel', 'polenum', 'pwnat', 'sbd']
+packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
+packages['exploitation'] = ['armitage', 'backdoor-factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux-exploit-suggester', 'maltego-teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
+packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone-backup-analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
+packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
+packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john', 'johnny', 'keimpx', 'maltego-teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
+packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
+packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g', 'smali']
+packages['extras'] = ['squid3', 'wifresti']
+
+# adds a redirect for user's numeric input
+packages['0'] = packages['info_gathering']
+packages['1'] = packages['vuln_analysis']
+packages['2'] = packages['wifi']
+packages['3'] = packages['web']
+packages['4'] = packages['sniffing_spoofing']
+packages['5'] = packages['keep_access']
+packages['6'] = packages['reporting']
+packages['7'] = packages['exploitation']
+packages['8'] = packages['forensics']
+packages['9'] = packages['stress_test']
+packages['10'] = packages['info_gathering']
+packages['11'] = packages['passwords']
+packages['12'] = packages['reverse_engineering']
+packages['13'] = packages['hardware']
+packages['14'] = packages['extras']
+
+# special git folders. If found here, will use this URL instead of the default one
+specialGitURL = {}
+specialGitURL['wifresti'] = 'https://github.com/LionSec/wifresti.git'
+
+# post-install scripts (what to do after cloning)
+postInstall = {}
+postInstall["nmap"] = ["./configure", "make", "make install"]
+postInstall["nikto"] = ["echo \"#!/bin/sh\ncd $(pwd)/program; ./nikto.pl\" > nikto.sh", "chmod u+x nikto.sh"]
+
+# how to run the cloned git (the script already guesses if there's an executable, this is for custom stuff)
+runCmds = {}
+
+# ##################################################################
+#          KALI's PACKAGES SHORT DESCRIPTIONS, LINKS
+# ##################################################################
+
 desc = {}
 desc['acccheck'] = "The tool is designed as a password dictionary attack tool that targets windows authentication via the SMB protocol. It is really a wrapper script around the ‘smbclient’ binary, and as a result is dependent on it for its execution."
 desc['ace-voip'] = "ACE (Automated Corporate Enumerator) is a simple yet powerful VoIP Corporate Directory enumeration tool that mimics the behavior of an IP Phone in order to download the name and extension entries that a given phone can display on its screen interface. In the same way that the “corporate directory” feature of VoIP hardphones enables users to easily dial by name via their VoIP handsets, ACE was developed as a research idea born from “VoIP Hopper” to automate VoIP attacks that can be targeted against names in an enterprise Directory. The concept is that in the future, attacks will be carried out against users based on their name, rather than targeting VoIP traffic against random RTP audio streams or IP addresses. ACE works by using DHCP, TFTP, and HTTP in order to download the VoIP corporate directory. It then outputs the directory to a text file, which can be used as input to other VoIP assessment tools."
@@ -118,7 +175,7 @@ desc['iphone-backup-analyzer'] = "iPhone Backup Analyzer is an utility designed 
 desc['ipv6-toolkit'] = "The SI6 Networks’ IPv6 toolkit is a set of IPv6 security assessment and trouble-shooting tools. It can be leveraged to perform security assessments of IPv6 networks, assess the resiliency of IPv6 devices by performing real-world attacks against them, and to trouble-shoot IPv6 networking problems. The tools comprising the toolkit range from packet-crafting tools to send arbitrary Neighbor Discovery packets to the most comprehensive IPv6 network scanning tool out there (our scan6 tool)."
 desc['ismtp'] = "Test for SMTP user enumeration (RCPT TO and VRFY), internal spoofing, and relay."
 desc['isr-evilgrade'] = "Evilgrade is a modular framework that allows the user to take advantage of poor upgrade implementations by injecting fake updates. It comes with pre-made binaries (agents), a working default configuration for fast pentests, and has it’s own WebServer and DNSServer modules. Easy to set up new settings, and has an autoconfiguration when new binary agents are set. A modular framework that allows the user to take advantage of poor upgrade implementations by injecting fake updates."
-desc['jad'] = ""
+desc['jad'] = "Java decompiler. Decompiles the given Java class file."
 desc['javasnoop'] = "JavaSnoop attempts to attach to an existing process (like a debugger) and instantly begin tampering with method calls, run custom code, or just watch what’s happening on the system. Normally, without access to the original source code, testing the security of a Java client is unpredictable at best and unrealistic at worst. With access the original source, you can run a simple Java program and attach a debugger to it remotely, stepping through code and changing variables where needed. Doing the same with an applet is a little bit more difficult. Unfortunately, real-life scenarios don’t offer you this option, anyway. Compilation and decompilation of Java are not really as deterministic as you might imagine. Therefore, you can’t just decompile a Java application, run it locally and attach a debugger to it. Next, you may try to just alter the communication channel between the client and the server, which is where most of the interesting things happen anyway. This works if the client uses HTTP with a configurable proxy. Otherwise, you’re stuck with generic network traffic altering mechanisms. These are not so great for almost all cases, because the data is usually not plaintext. It’s usually a custom protocol, serialized objects, encrypted, or some combination of those. JavaSnoop attempts to solve this problem by allowing you attach to an existing process (like a debugger) and instantly begin tampering with method calls, run custom code, or just watch what’s happening on the system."
 desc['jboss-autopwn'] = "This JBoss script deploys a JSP shell on the target JBoss AS server. Once deployed, the script uses its upload and command execution capability to provide an interactive session."
 desc['jd-gui'] = "JD-GUI is a standalone graphical utility that displays Java source codes of “.class” files. You can browse the reconstructed source code with the JD-GUI for instant access to methods and fields."
@@ -127,7 +184,7 @@ desc['johnny'] = "Johnny provides a GUI for the John the Ripper password crackin
 desc['joomscan'] = "Joomla! is probably the most widely-used CMS out there due to its flexibility, user-friendlinesss, extensibility to name a few. So, watching its vulnerabilities and adding such vulnerabilities as KB to Joomla scanner takes ongoing activity. It will help web developers and web masters to help identify possible security weaknesses on their deployed Joomla! sites."
 desc['jsql'] = "jSQL Injection is a lightweight application used to find database information from a distant server. jSQL is free, open source and cross-platform (Windows, Linux, Mac OS X, Solaris)."
 desc['kalibrate-rtl'] = "Kalibrate, or kal, can scan for GSM base stations in a given frequency band and can use those GSM base stations to calculate the local oscillator frequency offset."
-desc['keepnote'] = ""
+desc['keepnote'] = "KeepNote is a note taking application that works on Windows, Linux, and MacOS X. With KeepNote, you can store your class notes, TODO lists, research notes, journal entries, paper outlines, etc in a simple notebook hierarchy with rich-text formatting, images, and more. Using full-text search, you can retrieve any note for later reference. KeepNote is designed to be cross-platform (implemented in Python and PyGTK) and stores your notes in simple and easy to manipulate file formats (HTML and XML). Archiving and transferring your notes is as easy as zipping or copying a folder."
 desc['keimpx'] = ""
 desc['killerbee'] = "KillerBee is a Python based framework and tool set for exploring and exploiting the security of ZigBee and IEEE 802.15.4 networks. Using KillerBee tools and a compatible IEEE 802.15.4 radio interface, you can eavesdrop on ZigBee networks, replay traffic, attack cryptosystems and much more. Using the KillerBee framework, you can build your own tools, implement ZigBee fuzzing, emulate and attack end-devices, routers and coordinators and much more. Identifies available interfaces that can be used by KillerBee and associated tools. A GTK GUI application for tracking the location of an IEEE 802.15.4 transmitter by measuring RSSI.  Zbfind can be passive in discovery (only listen for packets) or it can be active by sending Beacon Request frames and recording the responses from ZigBee routers and coordinators."
 desc['kismet'] = "Kismet is an 802.11 layer-2 wireless network detector, sniffer, and intrusion detection system. It will work with any wireless card that supports raw monitoring (rfmon) mode, and can sniff 802.11a/b/g/n traffic. It can use other programs to play audio alarms for network events, read out network summaries, or provide GPS coordinates. This is the main package containing the core, client, and server. Meant to be run inside the Kismet IPC framework."

@@ -6,65 +6,21 @@ import sys
 import subprocess
 import requests
 import signal
-import desc
 from bs4 import BeautifulSoup, SoupStrainer
 
 # global constants
 REMOTE_URL='git://git.kali.org/packages/{PACKAGE}.git'
 PACKAGE_FOLDER='dist/'
 
-# ##################################################################
-#          KALI's PACKAGES DEFINITIONS, INSTALL PROCEDURES
-# ##################################################################
-
-# package definitions
-packages = {}
-packages['info_gathering'] = ['acccheck', 'ace-voip', 'amap', 'automater', 'bing-ip2hosts', 'braa', 'casefile', 'cdpsnarf', 'cisco-torch', 'cookie-cadger', 'copy-router-config', 'dmitry', 'dnmap', 'dnsenum', 'dnsmap', 'dnsrecon', 'dnstracer', 'dnswalk', 'dotdotpwn', 'enum4linux', 'enumiax', 'exploitdb', 'fierce', 'firewalk', 'fragroute', 'fragrouter', 'ghost-phisher', 'golismero', 'goofile', 'hping3', 'intrace', 'ismtp', 'lbd', 'maltego-teeth', 'masscan', 'metagoofil', 'miranda', 'nmap', 'ntop', 'p0f', 'parsero', 'recon-ng', 'set', 'smtp-user-enum', 'snmpcheck', 'sslcaudit', 'sslsplit', 'sslstrip', 'sslyze', 'thc-ipv6', 'theharvester', 'tlssled', 'twofi', 'urlcrazy', 'wireshark', 'wol-e', 'xplico']
-packages['vuln_analysis'] = ['bbqsql', 'bed', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'copy-router-config', 'dbpwaudit', 'doona', 'greenbone-security-assistant', 'gsd', 'hexorbase', 'inguma', 'jsql', 'lynis', 'nmap', 'ohrwurm', 'openvas-administrator', 'openvas-cli', 'openvas-manager', 'openvas-scanner', 'oscanner', 'powerfuzzer', 'sfuzz', 'sidguesser', 'siparmyknife', 'sqlmap', 'sqlninja', 'sqlsus', 'thc-ipv6', 'tnscmd10g', 'unix-privesc-check', 'yersinia']
-packages['wifi'] = ['aircrack-ng', 'asleap', 'bluelog', 'bluemaho', 'bluepot', 'blueranger', 'bluesnarfer', 'bully', 'cowpatty', 'crackle', 'eapmd5pass', 'fern-wifi-cracker', 'ghost-phisher', 'giskismet', 'gr-scan', 'kalibrate-rtl', 'killerbee', 'kismet', 'mdk3', 'mfcuk', 'mfoc', 'mfterm', 'multimon-ng', 'pixiewps', 'reaver', 'redfang', 'rtlsdr-scanner', 'spooftooph', 'wifi-honey', 'wifitap', 'wifite']
-packages['web'] = ['apache-users', 'arachni', 'bbqsql', 'blindelephant', 'burpsuite', 'commix', 'cutycapt', 'davtest', 'deblaze', 'dirb', 'dirbuster', 'fimap', 'funkload', 'grabber', 'jboss-autopwn', 'joomscan', 'jsql', 'maltego-teeth', 'padbuster', 'paros', 'parsero', 'plecost', 'powerfuzzer', 'proxystrike', 'recon-ng', 'skipfish', 'sqlmap', 'sqlninja', 'sqlsus', 'ua-tester', 'uniscan', 'vega', 'w3af', 'webscarab', 'webshag', 'webslayer', 'websploit', 'wfuzz', 'wpscan', 'xsser', 'zaproxy']
-packages['sniffing_spoofing'] = ['burpsuite', 'dnschef', 'fiked', 'hamster-sidejack', 'hexinject', 'iaxflood', 'inviteflood', 'ismtp', 'isr-evilgrade', 'mitmproxy', 'ohrwurm', 'protos-sip', 'rebind', 'responder', 'rtpbreak', 'rtpinsertsound', 'rtpmixsound', 'sctpscan', 'siparmyknife', 'sipp', 'sipvicious', 'sniffjoke', 'sslsplit', 'sslstrip', 'thc-ipv6', 'voiphopper', 'webscarab', 'wifi-honey', 'wireshark', 'xspy', 'yersinia', 'zaproxy']
-packages['keep_access'] = ['cryptcat', 'cymothoa', 'httptunnel', 'intersect', 'nishang', 'powersploit', 'ridenum', 'u3-pwn', 'webshells', 'weevely', 'dbd', 'dns2tcp', 'httptunnel', 'polenum', 'pwnat', 'sbd']
-packages['reporting'] = ['casefile', 'cutycapt', 'dos2unix', 'dradis', 'keepnote', 'magictree', 'metagoofil', 'nipper-ng', 'pipal']
-packages['exploitation'] = ['armitage', 'backdoor-factory', 'beef', 'cisco-auditing-tool', 'cisco-global-exploiter', 'cisco-ocs', 'cisco-torch', 'commix', 'crackle', 'jboss-autopwn', 'linux-exploit-suggester', 'maltego-teeth', 'set', 'shellnoob', 'sqlmap', 'thc-ipv6', 'yersinia']
-packages['forensics'] = ['binwalk', 'bulk-extractor', 'capstone', 'chntpw', 'cuckoo', 'dc3dd', 'ddrescue', 'dff', 'distorm3', 'dumpzilla', 'extundelete', 'foremost', 'galleta', 'guymager', 'iphone-backup-analyzer', 'p0f', 'pdf-parser', 'pdfid', 'pdgmail', 'peepdf', 'regripper', 'volatility', 'xplico']
-packages['stress_test'] = ['dhcpig', 'funkload', 'iaxflood', 'inundator', 'inviteflood', 'ipv6-toolkit', 'mdk3', 'reaver', 'rtpflood', 'slowhttptest', 't50', 'termineter', 'thc-ipv6', 'thc-ssl-dos']
-packages['passwords'] = ['acccheck', 'burpsuite', 'cewl', 'chntpw', 'cisco-auditing-tool', 'cmospwd', 'creddump', 'crunch', 'dbpwaudit', 'findmyhash', 'gpp-decrypt', 'hash-identifier', 'hexorbase', 'john', 'johnny', 'keimpx', 'maltego-teeth', 'maskprocessor', 'multiforcer', 'ncrack', 'oclgausscrack', 'pack', 'patator', 'phrasendrescher', 'polenum', 'rainbowcrack', 'rcracki-mt', 'rsmangler', 'sqldict', 'statsprocessor', 'hydra', 'thc-pptp-bruter', 'truecrack', 'webscarab', 'wordlists', 'zaproxy']
-packages['reverse_engineering'] = ['apktool', 'dex2jar', 'distorm3', 'edb-debugger', 'jad', 'javasnoop', 'jd-gui', 'ollydbg', 'smali', 'valgrind', 'yara']
-packages['hardware'] = ['android-sdk', 'apktool', 'arduino', 'dex2jar', 'sakis3g', 'smali']
-packages['extras'] = ['squid3', 'wifresti']
-
-# adds a redirect for user's numeric input
-packages['0'] = packages['info_gathering']
-packages['1'] = packages['vuln_analysis']
-packages['2'] = packages['wifi']
-packages['3'] = packages['web']
-packages['4'] = packages['sniffing_spoofing']
-packages['5'] = packages['keep_access']
-packages['6'] = packages['reporting']
-packages['7'] = packages['exploitation']
-packages['8'] = packages['forensics']
-packages['9'] = packages['stress_test']
-packages['10'] = packages['info_gathering']
-packages['11'] = packages['passwords']
-packages['12'] = packages['reverse_engineering']
-packages['13'] = packages['hardware']
-packages['14'] = packages['extras']
-
-# special git folders. If found here, will use this URL instead of the default one
-specialGitURL = {}
-specialGitURL['wifresti'] = 'https://github.com/LionSec/wifresti.git'
-
-# post-install scripts (what to do after cloning)
-postInstall = {}
-postInstall["nmap"] = ["./configure", "make", "make install"]
-postInstall["nikto"] = ["echo \"#!/bin/sh\ncd $(pwd)/program; ./nikto.pl\" > nikto.sh", "chmod u+x nikto.sh"]
-
-# how to run the cloned git (the script already guesses if there's an executable, this is for custom stuff)
-runCmds = {}
 
 # ##################################################################
-#                            FUNCTIONS
+#                              DATA
+# ##################################################################
+
+import data
+
+# ##################################################################
+#                       HELPER FUNCTIONS
 # ##################################################################
 
 # Helper that handles Ctrl-D
@@ -140,9 +96,9 @@ def installIfNeeded(package):
         print("Not found, gonna clone in", dirName)
         gitClone(url, dirName)
 
-        if package in postInstall:
+        if package in data.postInstall:
             print("Found post-install script(s)")
-            for s in postInstall[package]:
+            for s in data.postInstall[package]:
                 os.system("cd " + dirName + " && " + s)
 
 # main function that tries to run a program (possibly cloning it before)
@@ -158,9 +114,9 @@ def run(package):
         installIfNeeded(package)
 
         # if we know how to run it, call the command
-        if package in runCmds:
+        if package in data.runCmds:
             print("Running", package)
-            os.system(runCmds[package])
+            os.system(data.runCmds[package])
 
         #if we don't, try to guess
         else:
@@ -182,8 +138,8 @@ def run(package):
 # test all packages names against the reference URL, shows broken links / packages
 def testAllURLs():
     allPackages = []
-    for cat in packages:
-        allPackages += packages[cat]
+    for cat in data.packages:
+        allPackages += data.packages[cat]
     allPackages = set(allPackages)
     allPackages = sorted(list(allPackages))
 
@@ -200,7 +156,7 @@ def testAllURLs():
 
     #for each package, check if in page
     for p in allPackages:
-        if p not in specialGitURL:
+        if p not in data.specialGitURL:
             fullPath = "packages/"+p+".git"
             if p not in source:
                 print("Error", p, "@", fullPath, "not found.")
@@ -229,13 +185,13 @@ Please select a category:
 7) Reporting Tools                  14) Extra
 ''')
     action = ""
-    while not action.isdigit() or int(action)<1 or int(action)>14 or not str(action) in packages:
+    while not action.isdigit() or int(action)<1 or int(action)>14 or not str(action) in data.packages:
         action = readInput("Category: ")
     printKaliSubMenu(str(action))
 
 # prints one of Kali's categories
 def printKaliSubMenu(id):
-    ps = packages[id]
+    ps = data.packages[id]
 
     #compute a map to find the package given the number
     m = {}
@@ -247,8 +203,8 @@ def printKaliSubMenu(id):
         m[i] = p
         spaces = ' ' * (longestStr - len(p))
         description = ""
-        if p in desc.desc:
-            description = desc.desc[p]
+        if p in data.desc:
+            description = data.desc[p]
         if i < 10 :
             print(' '+ str(i) + ") "+p, spaces, description)
         else:
@@ -308,8 +264,8 @@ def fetchPackageLinks():
     return links
 
 def fetchPackageDescription(links):
-    for p in sorted(desc.desc.keys()):
-        if desc.desc[p] == "":
+    for p in sorted(data.desc.keys()):
+        if data.desc[p] == "":
             if p in links:
                 #print("Getting doc for", p)
                 d = requests.get(links[p])

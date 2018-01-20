@@ -42,6 +42,7 @@ packages['14'] = packages['extras']
 # special git folders. If found here, will use this URL instead of the default one
 specialGitURL = {}
 specialGitURL['wifresti'] = 'https://github.com/LionSec/wifresti.git'
+specialGitURL['nishang'] = 'https://github.com/samratashok/nishang'
 
 # post-install scripts (what to do after cloning)
 postInstall = {}

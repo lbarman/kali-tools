@@ -104,6 +104,9 @@ def installIfNeeded(package):
     print("Testing if", package, "exists locally...")
     if not isInstalledWithGitLocally(package) :
         url = REMOTE_URL.replace("{PACKAGE}", package)
+        if  package in data.specialGitURL:
+            url = data.specialGitURL[package]
+            print("Using special URL", url)
         print("Not found, gonna clone in", dirName)
         gitClone(url, dirName)
 
